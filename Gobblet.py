@@ -1,42 +1,77 @@
 #Gobblet
-board = [[[0],[0],[0],[0]],
-         [[0],[0],[0],[0]],
-         [[0],[0],[0],[0]],
-         [[0],[0],[0],[0]]] #4x4 grid with array of pieces on each spot and standard coordinates
-currentPlayer=_
-player1 = 
-boardInUse = False
-pieceInUse = _
 
-def updateBoard():
-    print 
+#All game actions will be done on main game board, when it is called the game will play until someone wins
+class Board:
+    def __init__(self):
+        self.board = [[[],[],[],[]],
+                      [[],[],[],[]],
+                      [[],[],[],[]],
+                      [[],[],[],[]]]
+        #populate the board with ghost pieces of no size and no color
+        for y in range(4):
+            for x in range(4):
+                self.board[y][x].append(Piece("X", 0))
+        #initialize each player
+        self.player1 = Player("W", raw_input("player 1 name: "))
+        self.player2 = Player("B", raw_input("player 2 name: "))
+        self.currentPlayer = self.player1
+        self.BoardInUse = False
+
+    def checkWin():
+        #horizontal 4 in a row
+        for r in self.board:
+            color = r[0][0].BW
+            if r[1][0].BW==color and r[2][0].BW==color and r[3][0].BW==color:
+                return (True, color)
+        #vertical 4 in a row
+        for c in self.board[0]:
+            color = c[0].BW
+            i = self.board[0].index(c)
+            if self.board[1][i][0].BW==color and self.board[2][i][0].BW==color and self.board[3][i][0].BW==color:
+                return (True, color)
+        #2 diagonal 4 in a row
+        color1 = self.board[0][0][0].BW
+        color2 = self.board[3][0][0].BW
+        if self.board[1][1][0].BW==color1 and self.board[2][2][0].BW==color1 and self.board[3][3][0].BW==color1:
+            return (True, color1)
+        if self.board[2][1][0].BW==color2 and self.board[1][2][0].BW==color2 and self.board[0][3][0].BW==color2:
+            return (True, color2)
+        return (False, "X")
+    
+    def usePiece(x,y):
+        piece = self.board[4-y][x-1]
+        #if you try to use a piece at a spot with no piece or a piece that is not their colorreturn False
+        if piece.BW!=self.currentPlayer.BW:
+            print "there's either no piece there or it's not your piece"
+            return False
+        #return the popped piece at spot on board
+        return piece.popleft()
+    
+    def pieceB(x,y):
+        return board[4-y][x-1][0]
 
 class Player:
-    BW = _
-    inv = [[4,3,2,1],[4,3,2,1],[4,3,2,1]] #pieces invintory
+    def __init__(self, blackorwhite, name):
+        self.name = name
+        self.BW = blackorwhite
+        self.inv = [[],[],[]]
+        for x in range(3):
+            for z in range(4):
+                self.inv[x].append(Piece(self.BW, 4-z))
+    def usePiece(size):
+        for p in self.inv:
+            if p[0].size==size:
+                return p.popleft()
+        print "you don't have that size piece"
+        return False
 
 class Piece:
-    BW = _
-    size = _
-
-#Attempt to use piece from Board B or Player P-------------------------
-def usePieceP(player,size):
-    for p in player.inv:
-        if p[0].size==size:
-            return p.popleft()
-    print "you don't have that size piece"
-    return False
-def usePieceB(x,y):
-    if piece(x,y).size==0:
-        print "there is no piece at that spot"
-        return False
-    return board[4-y][x-1].popleft()
-
-#get top piece at spoton the board
-def pieceB(x,y):
-    return board[4-y][x-1][0]
+    def __int__(self, blackorwhite, s):
+        self.BW = blackorwhite
+        self.size = s
 
 #-------------------------------------------------------------------
+
 
 def 3inRow(x,y): #returns true if the piece is part of 3 in a row
     return vert3(x,y) or hori3(x,y) or posdia3(x,y) or negdia3(x,y)
@@ -127,3 +162,5 @@ def negdia3(x,y):
     else:
         return False
 #---------------------------------------------------------------------------------------------
+
+game = Board()
