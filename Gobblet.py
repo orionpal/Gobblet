@@ -10,38 +10,46 @@ class GobbletGame:
     def __init__(self, PlayerW, PlayerB):
         self.PlayerW = PlayerW
         self.PlayerB = PlayerB
-        self.GameBoard = Board(PlayerW, PlayerB)
-        self.Holding = None
+        self.GameBoard = Board.Board(PlayerW, PlayerB)
+        self.Holding = Board.Piece('X', -1)
         self.fromBoard = False
+    
+    def currentPlayer(self):
+        return self.GameBoard.currentPlayer
     
     def holdInvP(self, stacknum):
         if (self.fromBoard==False):
             self.Holding = self.GameBoard.currentPlayer.getTopPiece(stacknum)
+            return True
         else:
             print("you're holding a piece from the board")
+            return False
         
     def holdBoardP(self, x, y):
         if (self.fromBoard==False):
             if (self.GameBoard.pieceAt(x, y).Color==self.GameBoard.currentPlayer.Color):
                 self.Holding = self.GameBoard.grabFromBoard(x, y)
                 self.fromBoard = (x, y)
+                return True
             else:
                 print("that's not your piece")
+                return False
         else:
             print("you're already holding a piece from the board")
+            return False
         
     def makeMove(self, x, y):
         if (self.fromBoard==False):
             if (self.GameBoard.movFromInv(self.Holding, x, y)):
                 self.GameBoard.nextTurn()
-                self.Holding = None
+                self.Holding = Board.Piece('X', -1)
                 return True
             return False
-        if (self.fromBoard!=False):
+        elif (self.fromBoard!=False):
             if (self.fromBoard[0]!=x and self.fromBoard[1]!=y):
                 if (self.GameBoard.movFromBoard(self.Holding, x, y)):
                     self.GameBoard.nextTurn()
-                    self.Holding = None
+                    self.Holding = Board.Piece('X', -1)
                     self.fromBoard = False
                     return True
         return False

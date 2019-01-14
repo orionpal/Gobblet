@@ -73,7 +73,7 @@ class Board:
         if (self.currentPlayer.Color=='W'):
             self.PlayerW = self.currentPlayer
             self.currentPlayer = self.PlayerB
-        if (self.currentPlayer.Color=='B'):
+        elif (self.currentPlayer.Color=='B'):
             self.PlayerB = self.currentPlayer
             self.currentPlayer = self.PlayerW
     #----------------------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ class Board:
         if (y==3):
             bot = self.pieceAt(x,y-1).Color==color and self.pieceAt(x,y-2).Color==color
         return top or mid or bot
-    def partOf3WE(self, x, y, color):
+    def partOf3WE(self, x, y):
         color = self.pieceAt(x,y).Color
         left = False
         mid = False
@@ -169,7 +169,7 @@ class Board:
         if (x==3):
             right = self.pieceAt(x-1,y).Color==color and self.pieceAt(x-2,y).Color==color
         return left or mid or right
-    def partOf3NW(self, x, y, color):
+    def partOf3NW(self, x, y):
         color = self.pieceAt(x,y).Color
         topleft = False
         mid = False
@@ -197,7 +197,7 @@ class Board:
             if (x==2 or x==3):
                 botright = self.pieceAt(x-1,y-1).Color==color and self.pieceAt(x-2,y-2).Color==color
         return topleft or mid or botright
-    def partOf3NE(self, x, y, color):
+    def partOf3NE(self, x, y):
         color = self.pieceAt(x,y).Color
         topright = False
         mid = False
