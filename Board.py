@@ -29,17 +29,19 @@ class Player:
     def getTopPiece(self, stacknum):
         stack = self.Inv[stacknum-1]
         if (len(stack)==0):
-            print("This stack has no pieces")
-            return False
+            #print("This stack has no pieces")
+            return Piece('X', -1)
         return stack[len(stack)-1]
 
     def removePiece(self, piece):
         for i in range(3):
             stack = self.Inv[i]
-            if (stack[len(stack)-1]==piece):
+            if (len(stack)==0):
+                pass
+            elif (stack[len(stack)-1]==piece):
                 self.Inv[i] = stack[:len(stack)-1]
                 return piece
-        print('This piece is not available for use')
+        #print('This piece is not available for use')
         return piece
 #------------------------------------------------------------------------------------------
         
@@ -67,6 +69,11 @@ class Board:
         
         self.currentPlayer = self.PlayerW
         #self.BoardInUse = False
+    #--------------------------------------------------------------------------------------------------
+    #print board as text
+    def showBoard(self):
+        for y in range(4):
+            print("["+ str(self.pieceAt(0,y).Size)+self.pieceAt(0,y).Color+"]"+"["+ str(self.pieceAt(1,y).Size)+self.pieceAt(1,y).Color+"]"+"["+ str(self.pieceAt(2,y).Size)+self.pieceAt(2,y).Color+"]"+"["+ str(self.pieceAt(3,y).Size)+self.pieceAt(3,y).Color+"]")
     #---------------------------------------------------------------------------------------------------
     #swaps current player and updates players based on what changed with current player
     def nextTurn(self):
@@ -79,12 +86,12 @@ class Board:
     #----------------------------------------------------------------------------------------------------
     def move(self, piece, x, y):
         if (piece.Color!=self.currentPlayer.Color):
-            print("This is not your piece")
+            #print("This is not your piece")
             return False
         if (self.pieceAt(x, y).Size < piece.Size):
             self.GBoard[y][x].append(piece)
             return True
-        print ("The piece here is too big to cover")
+        #print ("The piece here is too big to cover")
         return False
     def movFromBoard(self, piece, x, y):
         return self.move(piece, x, y)
@@ -98,9 +105,8 @@ class Board:
     def grabFromBoard(self, x, y):
         return self.GBoard[y][x].pop()
     #-------------------------------------------------------------------------------------------------
-    #checks if current player has won on board
-    def checkWin(self):
-        color = self.currentPlayer.Color
+    #checks if a player has won on board
+    def checkWin(self, color):
         #horizontal 4 in a row
         for r in range(4):
             if (self.pieceAt(0,r).Color==color and

@@ -17,12 +17,18 @@ class GobbletGame:
     def currentPlayer(self):
         return self.GameBoard.currentPlayer
     
+    def checkWin(self, color):
+        return self.GameBoard.checkWin(color)
+    
+    def pieceAt(self, x, y):
+        return self.GameBoard.pieceAt(x, y)
+    
     def holdInvP(self, stacknum):
         if (self.fromBoard==False):
             self.Holding = self.GameBoard.currentPlayer.getTopPiece(stacknum)
             return True
         else:
-            print("you're holding a piece from the board")
+            #print("you're holding a piece from the board")
             return False
         
     def holdBoardP(self, x, y):
@@ -32,10 +38,10 @@ class GobbletGame:
                 self.fromBoard = (x, y)
                 return True
             else:
-                print("that's not your piece")
+                #print("that's not your piece")
                 return False
         else:
-            print("you're already holding a piece from the board")
+            #print("you're already holding a piece from the board")
             return False
         
     def makeMove(self, x, y):
@@ -46,7 +52,7 @@ class GobbletGame:
                 return True
             return False
         elif (self.fromBoard!=False):
-            if (self.fromBoard[0]!=x and self.fromBoard[1]!=y):
+            if (self.fromBoard[0]!=x or self.fromBoard[1]!=y):
                 if (self.GameBoard.movFromBoard(self.Holding, x, y)):
                     self.GameBoard.nextTurn()
                     self.Holding = Board.Piece('X', -1)
