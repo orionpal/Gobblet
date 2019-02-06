@@ -39,7 +39,7 @@ class AI:
             self.Game.undoMove(lm)
         
         if (len(bestSets)==0):
-            self.makeRandMove
+            self.makeRandMove()
             return True
         bestSet = random.choice(bestSets)
         self.makeListMove(bestSet)
