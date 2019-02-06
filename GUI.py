@@ -57,8 +57,6 @@ class GobbletGUI(Frame):
                 return True
         #Try to move
         elif (self.Game.makeMove(x-1,y-1)):
-            #self.Computer.updateGame(self.Game)
-            self.Computer.makeRobMove()
             self.updateInv()
             self.updateBoard()
             self.clearHold()
@@ -75,6 +73,10 @@ class GobbletGUI(Frame):
             elif (self.Game.checkWin('B')):
                 self.updateMessage(self.Game.PlayerB.Name + " has won the game!")
                 return True
+            self.Computer.makeRobMove()
+            self.updateInv()
+            self.updateBoard()
+            self.clearHold()
             return True
         return False
 

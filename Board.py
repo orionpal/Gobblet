@@ -33,6 +33,7 @@ class Player:
             return Piece('X', -1)
         return stack[len(stack)-1]
 
+    #can be exchanged for stacknum removal
     def removePiece(self, piece):
         for i in range(3):
             stack = self.Inv[i]
@@ -78,10 +79,8 @@ class Board:
     #swaps current player and updates players based on what changed with current player
     def nextTurn(self):
         if (self.currentPlayer.Color=='W'):
-            self.PlayerW = self.currentPlayer
             self.currentPlayer = self.PlayerB
         elif (self.currentPlayer.Color=='B'):
-            self.PlayerB = self.currentPlayer
             self.currentPlayer = self.PlayerW
     #----------------------------------------------------------------------------------------------------
     def move(self, piece, x, y):
@@ -96,11 +95,15 @@ class Board:
     def movFromBoard(self, piece, x, y):
         return self.move(piece, x, y)
     def movFromInv(self, piece, x, y):
-        if (self.partOf3Rule(x,y) or self.pieceAt(x,y).Size==-1):
+        if (self.pieceAt(x,y).Size==-1):
             if (self.move(piece, x, y)):
                 self.currentPlayer.removePiece(piece)
                 return True
             return False
+        elif(self.partOf3Rule(x,y,piece)):
+            self.move(piece, x, y)
+            self.currentPlayer.removePiece(piece)
+            return True
         return False
     def grabFromBoard(self, x, y):
         return self.GBoard[y][x].pop()
@@ -136,13 +139,18 @@ class Board:
     #--------------------------------------------------------------------------------------------------
     def pieceAt(self, x, y):
         return self.GBoard[y][x][len(self.GBoard[y][x])-1]
+    def piecesAt(self, x, y):
+        return self.GBoard[y][x]
     #checks for 3 in a row rule
-    def partOf3Rule(self, x, y):
+    def partOf3Rule(self, x, y, piece):
         if (self.pieceAt(x,y).Color == self.currentPlayer.Color):
+            return False
+        if (self.pieceAt(x,y).Size>=piece.Size):
             return False
         return self.partOf3NS(x,y) or self.partOf3WE(x,y) or self.partOf3NW(x,y) or self.partOf3NE(x,y)
     #-------------------------------------------------------------------------------------------------------
     #functions checking 3 in a row vertical, horizontal, and diagonal
+    #expensive
     def partOf3NS(self, x, y):
         color = self.pieceAt(x,y).Color
         top = False
