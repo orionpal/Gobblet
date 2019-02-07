@@ -19,6 +19,7 @@ class AI:
     def makeRobMove(self):
         #self.makeRatedMove()
         self.nLookAhead(1)
+        #self.makeRandMove()
         
     def nLookAhead(self, n):
         #dumG = copy.deepcopy(game)
